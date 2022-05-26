@@ -1,0 +1,1 @@
+{'test_accuracy': 0.556, 'dev_accuracy': 0.61, 'config': {'lang': 'EN', 'NUM_EPOCH': 5, 'model_name': 'xlm-roberta-base', 'model_type': 'xlmroberta'}}
