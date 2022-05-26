@@ -19,3 +19,7 @@ We have two classifiers (cause and effect). We also have two plausible alternati
 |   A2   | [0.2, 0.08]  |  [0.8, 0.6]  |
 
 Model outputs are in the order [False, True]. What is to be done in this case? A simple trick would be to take the highest value. In this case this would mean answer 1 is correct and the answer is the effect of the premise. Should this be done differently?
+
+# Addendum 2022-05-26T10:19:37
+
+Question has been resolved. We train AND eval models separately. Meaning that the output matrix is no longer 2x2x2, but only 1x2x2.
