@@ -1,1 +1,11 @@
-{'test_accuracy': 0.556, 'dev_accuracy': 0.61, 'config': {'lang': 'EN', 'NUM_EPOCH': 5, 'model_name': 'xlm-roberta-base', 'model_type': 'xlmroberta'}}
+{'test_accuracy': 0.556, 'dev_accuracy': 0.61, 'lang': 'EN', 'NUM_EPOCH': 5, 'model_name': 'xlm-roberta-base', 'model_type': 'xlmroberta'}
+{'test_accuracy': 0.534, 'dev_accuracy': 0.57, 'lang': 'BG', 'NUM_EPOCH': 5, 'model_name': 'xlm-roberta-base', 'model_type': 'xlmroberta'}
+{'test_accuracy': 0.484, 'dev_accuracy': 0.57, 'lang': 'MT', 'NUM_EPOCH': 5, 'model_name': 'xlm-roberta-base', 'model_type': 'xlmroberta'}
+{'test_accuracy': 0.532, 'dev_accuracy': 0.52, 'lang': 'MK', 'NUM_EPOCH': 5, 'model_name': 'xlm-roberta-base', 'model_type': 'xlmroberta'}
+{'test_accuracy': 0.478, 'dev_accuracy': 0.47, 'lang': 'IS', 'NUM_EPOCH': 5, 'model_name': 'xlm-roberta-base', 'model_type': 'xlmroberta'}
+{'test_accuracy': 0.548, 'dev_accuracy': 0.49, 'lang': 'TR', 'NUM_EPOCH': 5, 'model_name': 'xlm-roberta-base', 'model_type': 'xlmroberta'}
+{'test_accuracy': 0.534, 'dev_accuracy': 0.55, 'lang': 'EN', 'NUM_EPOCH': 5, 'model_name': 'xlm-roberta-base', 'model_type': 'xlmroberta'}
+{'test_accuracy': 0.494, 'dev_accuracy': 0.55, 'lang': 'BG', 'NUM_EPOCH': 5, 'model_name': 'xlm-roberta-base', 'model_type': 'xlmroberta'}
+{'test_accuracy': 0.496, 'dev_accuracy': 0.47, 'lang': 'MT', 'NUM_EPOCH': 5, 'model_name': 'xlm-roberta-base', 'model_type': 'xlmroberta'}
+{'test_accuracy': 0.506, 'dev_accuracy': 0.54, 'lang': 'MK', 'NUM_EPOCH': 5, 'model_name': 'xlm-roberta-base', 'model_type': 'xlmroberta'}
+{'test_accuracy': 0.486, 'dev_accuracy': 0.48, 'lang': 'IS', 'NUM_EPOCH': 5, 'model_name': 'xlm-roberta-base', 'model_type': 'xlmroberta'}
