@@ -19,9 +19,9 @@ test = pd.read_excel("COPA-MT-MK.BG.TR.MT.IS.HR.xlsx", sheet_name="test").dropna
 dev = pd.read_excel("COPA-MT-MK.BG.TR.MT.IS.HR.xlsx", sheet_name="dev").dropna(axis=1, how="all").rename(columns=col_rename_dict)
 train = pd.read_excel("COPA-MT-MK.BG.TR.MT.IS.HR.xlsx", sheet_name="train").dropna(axis=1, how="all").rename(columns=col_rename_dict)
 
-def filter_dataframe(df: pd.DataFrame, lang: str ="EN", asksfor="cause", sep_token = None) -> pd.DataFrame:
+def filter_dataframe(df: pd.DataFrame, lang: str ="EN", asksfor="cause", sep_token = None, twocolumns = False) -> pd.DataFrame:
     lang = lang.upper()
-    assert lang in "EN MK BG TR MT IS HR.MT".split(), f"Input language {lang} is not supported."
+    assert lang in "EN MK.MT MK.HT BG TR MT IS HR.MT HR.HT".split(), f"Input language {lang} is not supported."
     assert asksfor in {"cause", "effect"}, "Parameter asksfor can be either 'cause' or 'effect'"
     assert sep_token, "Missing sep_token!"
 
@@ -46,6 +46,15 @@ def filter_dataframe(df: pd.DataFrame, lang: str ="EN", asksfor="cause", sep_tok
 
         text.append(t)
         labels.append(l)
+    if twocolumns:
+        text_p = [i.split(sep_token)[0] for i in text]
+        text_a = [i.split(sep_token)[1] for i in text]
+        return pd.DataFrame(data={
+                "text_p": text_p,
+                "text_a": text_a,
+                "labels": labels
+
+        })
     return pd.DataFrame(data={
         "text": text,
         "labels": labels
@@ -66,14 +75,14 @@ def COPA(**config):
 
     model_args = {
         "num_train_epochs": NUM_EPOCH,
-        # "learning_rate": 4e-5,
+        "learning_rate": 1e-5,
         "overwrite_output_dir": True,
-        # "train_batch_size": 8,
+        "train_batch_size": 16,
         "no_save": True,
         "no_cache": True,
         "overwrite_output_dir": True,
         "save_steps": -1,
-        "max_seq_length": 512,
+        # "max_seq_length": 512,
         "silent": ~True,
     }
 
@@ -91,7 +100,8 @@ def COPA(**config):
         test, lang=lang, asksfor="effect", sep_token=sep_token
     )
     model_effect.train_model(
-        train_effect, output_dir="models", verbose=True, show_running_loss=True
+        train_effect, output_dir="models", 
+        # verbose=True
     )
 
     def classify(logits):
@@ -126,9 +136,9 @@ def COPA(**config):
     cuda.empty_cache()
 
 
+
+
     # Cause:
-
-
     model_cause = ClassificationModel(
         model_type, model_name, num_labels=2, use_cuda=True, args=model_args
     )
@@ -141,10 +151,8 @@ def COPA(**config):
     model_cause.train_model(
         train_cause,
         output_dir="models",
-        verbose=False,
-        show_running_loss=True,
-        wandb_project="LM_EVAL",
-        wandb_kwargs={"entity": "wandb"},
+        # verbose=False,
+
     )
 
 
@@ -166,15 +174,75 @@ def COPA(**config):
         results.append(result)
     dev.loc[dev["asks-for"] == "cause", "y_pred"] = results
     from torch import cuda
-
     cuda.empty_cache()
 
     from sklearn.metrics import accuracy_score
     return {
         "test_accuracy": accuracy_score(test.gold, test.y_pred),
         "dev_accuracy": accuracy_score(dev.gold, dev.y_pred),
-        "config": config,
+        **config,
         # "dev_df": dev,
         # "test_df": test,
     }
 
+def instantiate_model(**config):
+    NUM_EPOCH = config.get("NUM_EPOCH")
+    lang = config.get("lang")
+    model_name = config.get("model_name")
+    model_type = config.get("model_type")
+    from simpletransformers.classification import ClassificationModel
+
+    model_args = {
+        "num_train_epochs": NUM_EPOCH,
+        "learning_rate": 1e-5,
+        "overwrite_output_dir": True,
+        "train_batch_size": 16,
+        "no_save": True,
+        "no_cache": True,
+        "overwrite_output_dir": True,
+        "save_steps": -1,
+        # "max_seq_length": 512,
+        "silent": ~True,
+    }
+
+    model = ClassificationModel(
+        model_type, model_name, num_labels=2, use_cuda=True, args=model_args
+    )
+    return model
+
+
+def classify(logits):
+    import numpy as np
+
+    index = np.unravel_index(np.argmax(logits, axis=None), logits.shape)
+    if index == (0, 0) or index == (1, 1):
+        # A1 false, A2 true
+        return 2
+    else:
+        # A1 true, A2 false
+        return 1
+
+def train_model_on(model, train_df, NUM_EPOCH=30):
+    model_args = {
+            "num_train_epochs": NUM_EPOCH,
+            "learning_rate": 1e-5,
+            "overwrite_output_dir": True,
+            "train_batch_size": 16,
+            "no_save": True,
+            "no_cache": True,
+            "overwrite_output_dir": True,
+            "save_steps": -1,
+            # "max_seq_length": 512,
+            "silent": ~True,
+        }
+    model.train_model(train_df, args = model_args, num_labels=2)
+    return model
+
+def eval_model(model, eval_df):
+    results = []
+    for i in tqdm(range(0, eval_df.shape[0], 2)):
+        texts = eval_df.iloc[i : i + 2, 0].values.tolist()
+        predictions, logits = model.predict(texts)
+        result = classify(logits)
+        results.append(result)
+    return results
