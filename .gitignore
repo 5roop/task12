@@ -130,7 +130,8 @@ dmypy.json
 
 wandb/
 
-
+Nikolas_code/
+*.pkl
 # Models
 models/
 LM/
