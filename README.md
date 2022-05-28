@@ -34,3 +34,6 @@ In this case I would search for maximal value. In the current example it would b
 
 Another fun fact:
 When instantiating Bertic models, set model type as bert. The warnings will be popping up to change model type to electra, but in this case the model will never finish training. So keep it 'bert'.
+
+# Addendum 2022-05-28T15:50:44
+So it turned out that I can only train 'Bertić' with type 'bert', else it trains forever.
