@@ -36,4 +36,8 @@ Another fun fact:
 When instantiating Bertic models, set model type as bert. The warnings will be popping up to change model type to electra, but in this case the model will never finish training. So keep it 'bert'.
 
 # Addendum 2022-05-28T15:50:44
-So it turned out that I can only train 'Bertić' with type 'bert', else it trains forever.
+So it turned out that I can only train 'Bertić' with type 'bert', else it trains forever (last experiment: 142 minutes, no results.).
+
+I shall now attempt replicating Nikola's metrics for classification: only look at the last column of prediction logits.
+
+With my evaluation I got accuracy of 0.534 on test split.
