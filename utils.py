@@ -214,13 +214,22 @@ def instantiate_model(**config):
 def classify(logits):
     import numpy as np
 
-    index = np.unravel_index(np.argmax(logits, axis=None), logits.shape)
-    if index == (0, 0) or index == (1, 1):
-        # A1 false, A2 true
-        return 2
-    else:
-        # A1 true, A2 false
+    
+    # index = np.unravel_index(np.argmax(logits, axis=None), logits.shape)
+    # if index == (0, 0) or index == (1, 1):
+    #     # A1 false, A2 true
+    #     return 2
+    # else:
+    #     # A1 true, A2 false
+    #     return 1
+
+    logits = np.array(logits)
+    if logits[0, 1] > logits[1,1]:
         return 1
+    if logits[0, 1] == logits[1,1]:
+        return np.random.choice([1,2])
+    else:
+        return 2
 
 def train_model_on(model, train_df, NUM_EPOCH=30):
     model_args = {
