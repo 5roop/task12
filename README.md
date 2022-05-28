@@ -40,4 +40,7 @@ So it turned out that I can only train 'Bertić' with type 'bert', else it train
 
 I shall now attempt replicating Nikola's metrics for classification: only look at the last column of prediction logits.
 
-With my evaluation I got accuracy of 0.534 on test split.
+* With my evaluation I got accuracy of 0.534 on test split.
+* With Nikola's: 0.508 on test split...
+
+Next step: reconstruction of Nikola's exact steps.
